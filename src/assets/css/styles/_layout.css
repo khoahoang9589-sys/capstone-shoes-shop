@@ -1,0 +1,5 @@
+/* Layout */
+main {
+  min-height: calc(100vh - var(--navbar-height));
+  padding-top: var(--space-lg);
+}
