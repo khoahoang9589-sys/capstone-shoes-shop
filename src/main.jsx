@@ -23,6 +23,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
 import Carts from './pages/Carts'
+import RequireAuth from './components/RequireAuth'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -34,8 +35,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="detail/:id" element={<Detail />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="carts" element={<Carts />} />
+          <Route path="profile" element={<RequireAuth><Profile /></RequireAuth>} />
+          <Route path="carts" element={<RequireAuth><Carts /></RequireAuth>} />
         </Route>
       </Routes>
     </Provider>

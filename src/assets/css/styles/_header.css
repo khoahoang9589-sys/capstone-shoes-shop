@@ -1,6 +1,6 @@
 /* Header / Navbar */
 .app-navbar {
-  height: var(--navbar-height);
+  min-height: var(--navbar-height);
   background-color: var(--color-primary);
   box-shadow: var(--shadow-medium);
 }

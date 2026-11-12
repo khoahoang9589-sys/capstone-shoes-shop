@@ -48,6 +48,11 @@
   /* Bootstrap overrides */
   --bs-primary: var(--color-primary);
   --bs-primary-rgb: 0, 120, 212;
+  --bs-success-rgb: var(--color-accent-rgb);
+  --bs-danger-rgb: var(--color-danger-rgb);
+  --bs-link-color: var(--color-primary-dark);
+  --bs-link-hover-color: var(--color-primary);
+  --bs-body-font-family: var(--font-primary);
   --bs-body-color: var(--color-text);
   --bs-body-bg: var(--color-bg);
   --bs-border-color: #d0d7e2;
@@ -67,6 +72,8 @@ html[data-theme="dark"] {
   --color-danger: #ef4444;
   --color-warning: #fbbf24;
   --bs-primary: #3b82f6;
+  --color-primary-rgb: 59, 130, 246;
+  --bs-primary-rgb: 59, 130, 246;
   --bs-body-color: #E0E0E0;
   --bs-body-bg: #121212;
   --bs-border-color: #444444;
