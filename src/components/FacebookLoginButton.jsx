@@ -8,8 +8,12 @@ export default function FacebookLoginButton() {
   const { state } = useLocation()
 
   function handleLogin() {
+    if (!window.FB) {
+      alert('Facebook SDK bị chặn hoặc chưa tải xong. Vui lòng tắt tiện ích chặn quảng cáo (AdBlock / Brave Shields) và thử lại.')
+      return
+    }
     window.FB.login(async function (response) {
-      if (response.authResponse?.accessToken) {
+      if (response?.authResponse?.accessToken) {
         try {
           await signInWithFacebook(response.authResponse.accessToken)
           navigate(safeReturnPath(state?.from), { replace: true })
