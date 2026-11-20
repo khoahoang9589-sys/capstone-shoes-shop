@@ -5,9 +5,9 @@ import { signInWithFacebook, errorMessage } from '../services/auth'
 
 const config = {
   appId: import.meta.env.VITE_FACEBOOK_APP_ID?.trim(),
-  version: import.meta.env.VITE_FACEBOOK_GRAPH_VERSION?.trim(),
+  version: import.meta.env.VITE_FACEBOOK_GRAPH_VERSION?.trim() || 'v20.0',
 }
-const configured = Boolean(config.appId && config.version)
+const configured = Boolean(config.appId)
 
 export default function FacebookLoginButton({ disabled, onBusyChange, onSuccess, onError }) {
   const [sdk, setSdk] = useState(null)
@@ -35,22 +35,35 @@ export default function FacebookLoginButton({ disabled, onBusyChange, onSuccess,
 
   function login() {
     if (inFlight.current || disabled) return
-    if (!sdk) { setAttempt(value => value + 1); return }
     inFlight.current = true
     setBusy(true)
     onBusyChange(true)
     onError(null)
-    requestFacebookToken(sdk)
-      .then(token => {
-        if (!mounted.current) return
-        return signInWithFacebook(token).then(() => {
-          if (mounted.current) onSuccess()
-        }, error => { if (mounted.current) onError(errorMessage(error)) })
-      }, error => { if (mounted.current) onError(error.message) })
-      .finally(() => {
+    const run = async () => {
+      try {
+        let activeSdk = sdk
+        if (!activeSdk) {
+          activeSdk = await loadFacebookSdk(config)
+          setSdk(activeSdk)
+        }
+        const token = await requestFacebookToken(activeSdk)
+        if (mounted.current) {
+          await signInWithFacebook(token)
+          onSuccess()
+        }
+      } catch (err) {
+        if (mounted.current) {
+          onError(err?.message || errorMessage(err))
+        }
+      } finally {
         inFlight.current = false
-        if (mounted.current) { setBusy(false); onBusyChange(false) }
-      })
+        if (mounted.current) {
+          setBusy(false)
+          onBusyChange(false)
+        }
+      }
+    }
+    run()
   }
 
   return <div className="mt-4">

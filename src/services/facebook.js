@@ -1,7 +1,10 @@
 let sdkPromise
 
-export function loadFacebookSdk({ appId, version }) {
-  if (!appId || !/^\d+$/.test(appId) || !/^v\d+\.\d+$/.test(version || '')) {
+export function loadFacebookSdk({ appId, version = 'v20.0' }) {
+  let v = (version || 'v20.0').trim()
+  if (!v.startsWith('v')) v = 'v' + v
+  if (!v.includes('.')) v = v + '.0'
+  if (!appId || !/^\d+$/.test(appId) || !/^v\d+\.\d+$/.test(v)) {
     return Promise.reject(new Error('Cần cấu hình Facebook App ID và phiên bản Graph API hợp lệ.'))
   }
   if (sdkPromise) return sdkPromise
@@ -17,7 +20,7 @@ export function loadFacebookSdk({ appId, version }) {
       if (error) { script?.remove(); reject(error); return }
       try {
         if (!window.FB) throw new Error('Không tải được Facebook SDK.')
-        window.FB.init({ appId, version, cookie: false, xfbml: false, status: false })
+        window.FB.init({ appId, version: v, cookie: false, xfbml: false, status: false })
         resolve(window.FB)
       } catch (error) { reject(error) }
     }
