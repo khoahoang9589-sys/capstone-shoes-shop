@@ -1,7 +1,3 @@
-// 👤 NGƯỜI LÀM: Hoàng Anh Khoa
-// 📌 NHIỆM VỤ: Trang giỏ hàng — render danh sách sản phẩm từ Redux, tính tổng tiền, đặt hàng
-// THAM KHẢO: reactjsbc97/src/pages/DemoRedux/GioHangRedux.jsx + GioHang.jsx
-
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
@@ -14,18 +10,14 @@ const Carts = () => {
   const [loadingOrder, setLoadingOrder] = useState(false)
   const [orderDone, setOrderDone] = useState(false)
 
-  // B1: Tính tổng số lượng
   const tongSoLuong = mangSanPham.reduce((total, item) => total + item.soLuong, 0)
 
-  // B2: Tính tổng tiền
   const tongTien = mangSanPham.reduce((total, item) => total + item.price * item.soLuong, 0)
 
-  // B3: Xử lý thanh toán / đặt hàng
   const handleCheckout = async () => {
     if (mangSanPham.length === 0) return
     try {
       setLoadingOrder(true)
-      // Lấy email của tài khoản đang đăng nhập
       const profileRes = await getProfile()
       const email = profileRes.data?.content?.email
 
@@ -49,7 +41,6 @@ const Carts = () => {
     }
   }
 
-  // Màn hình khi đặt hàng thành công
   if (orderDone) {
     return (
       <div className="container py-5 text-center">
@@ -71,7 +62,6 @@ const Carts = () => {
     )
   }
 
-  // Màn hình khi giỏ hàng trống
   if (mangSanPham.length === 0) {
     return (
       <div className="container py-5 text-center">
@@ -91,7 +81,7 @@ const Carts = () => {
   return (
     <div className="cart-page pb-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="h3 fw-bold mb-0">Giỏ Hàng Của Bạn</h2>
+        <h2 className="h3 fw-bold mb-0">Carts</h2>
         <button
           className="btn btn-outline-danger btn-sm"
           onClick={() => {
@@ -104,19 +94,18 @@ const Carts = () => {
         </button>
       </div>
 
-      {/* Bảng danh sách sản phẩm */}
       <div className="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
         <div className="table-responsive">
           <table className="table align-middle mb-0">
             <thead className="table-light">
               <tr>
-                <th>Mã SP</th>
-                <th>Hình ảnh</th>
-                <th>Tên sản phẩm</th>
-                <th>Đơn giá</th>
-                <th>Số lượng</th>
-                <th>Thành tiền</th>
-                <th>Hành động</th>
+                <th>id</th>
+                <th>img</th>
+                <th>name</th>
+                <th>price</th>
+                <th>quantity</th>
+                <th>total</th>
+                <th>action</th>
               </tr>
             </thead>
             <tbody>
@@ -138,7 +127,6 @@ const Carts = () => {
                   </td>
                   <td className="fw-semibold">${item.price}</td>
                   <td>
-                    {/* Cụm tăng giảm số lượng theo bài mẫu */}
                     <div className="d-flex align-items-center gap-2">
                       <button
                         className="btn btn-outline-secondary btn-sm"
@@ -163,7 +151,7 @@ const Carts = () => {
                       className="btn btn-danger btn-sm"
                       onClick={() => dispatch(xoaSPKhoiGioHang(item.id))}
                     >
-                      Xóa
+                      Delete
                     </button>
                   </td>
                 </tr>
@@ -172,19 +160,19 @@ const Carts = () => {
             <tfoot className="table-light">
               <tr>
                 <td colSpan="4" className="fw-bold text-end">
-                  Tổng cộng:
+                  Total:
                 </td>
-                <td className="fw-bold">{tongSoLuong} sản phẩm</td>
+                <td className="fw-bold">{tongSoLuong}</td>
                 <td className="fw-bold text-success fs-5">
                   ${tongTien.toLocaleString()}
                 </td>
                 <td>
                   <button
-                    className="btn btn-success btn-sm w-100"
+                    className="btn btn-warning fw-bold text-dark btn-sm w-100"
                     disabled={loadingOrder}
                     onClick={handleCheckout}
                   >
-                    {loadingOrder ? 'Đang gửi...' : 'Thanh toán'}
+                    {loadingOrder ? 'Submitting...' : 'SUBMIT ORDER'}
                   </button>
                 </td>
               </tr>

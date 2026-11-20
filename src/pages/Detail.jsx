@@ -1,7 +1,3 @@
-// 👤 NGƯỜI LÀM: Hoàng Anh Khoa
-// 📌 NHIỆM VỤ: Trang chi tiết sản phẩm — lấy dữ liệu theo params.id từ URL
-// THAM KHẢO: reactjsbc97/src/pages/Detail.jsx
-
 import React, { useEffect, useState } from 'react'
 import { useParams, NavLink } from 'react-router-dom'
 import axios from 'axios'
@@ -17,7 +13,6 @@ const Detail = () => {
   const [soLuong, setSoLuong] = useState(1)
   const [selectedSize, setSelectedSize] = useState(null)
 
-  // B1: Hàm call API lấy chi tiết sản phẩm theo id
   const getDetail = async () => {
     try {
       setLoading(true)
@@ -25,7 +20,6 @@ const Detail = () => {
       const data = res.data.content
       setProductDetail(data || {})
 
-      // Chọn size mặc định là size đầu tiên nếu có
       if (Array.isArray(data?.size) && data.size.length > 0) {
         setSelectedSize(data.size[0])
       }
@@ -37,13 +31,11 @@ const Detail = () => {
     }
   }
 
-  // B2: Gọi lại API mỗi khi params.id thay đổi
   useEffect(() => {
     getDetail()
     window.scrollTo(0, 0)
   }, [params.id])
 
-  // Xử lý thêm vào giỏ hàng
   const handleAddToCart = () => {
     dispatch(
       themSPVaoGioHang({
@@ -69,7 +61,6 @@ const Detail = () => {
 
   return (
     <div className="detail-page pb-5">
-      {/* Breadcrumb điều hướng */}
       <nav aria-label="breadcrumb" className="mb-4">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
@@ -81,10 +72,8 @@ const Detail = () => {
         </ol>
       </nav>
 
-      {/* Khối chi tiết sản phẩm */}
       <div className="card border-0 shadow-sm rounded-4 p-4 mb-5">
         <div className="row g-4 align-items-center">
-          {/* CỘT TRÁI: HÌNH ẢNH */}
           <div className="col-12 col-md-5 text-center">
             <div className="bg-light rounded-4 p-4">
               <img
@@ -96,15 +85,13 @@ const Detail = () => {
             </div>
           </div>
 
-          {/* CỘT PHẢI: THÔNG TIN CHI TIẾT */}
           <div className="col-12 col-md-7">
             <h1 className="h2 fw-bold text-capitalize mb-2">{productDetail.name}</h1>
             <p className="fs-3 fw-bold text-success mb-3">${productDetail.price}</p>
 
-            {/* Chọn Size */}
             {Array.isArray(productDetail.size) && productDetail.size.length > 0 && (
               <div className="mb-3">
-                <label className="fw-semibold d-block mb-2">Chọn size:</label>
+                <label className="fw-semibold d-block mb-2">Available size</label>
                 <div className="d-flex flex-wrap gap-2">
                   {productDetail.size.map((size) => (
                     <button
@@ -120,7 +107,6 @@ const Detail = () => {
               </div>
             )}
 
-            {/* Chọn Số Lượng */}
             <div className="mb-4">
               <label className="fw-semibold d-block mb-2">Số lượng:</label>
               <div className="d-flex align-items-center gap-3">
@@ -143,44 +129,63 @@ const Detail = () => {
                 </div>
 
                 <button className="btn btn-primary px-4" onClick={handleAddToCart}>
-                  Thêm vào giỏ hàng
+                  Add to cart
                 </button>
               </div>
             </div>
 
-            {/* Mô tả */}
             <div className="border-top pt-3">
-              <h5 className="fw-bold">Mô tả sản phẩm:</h5>
+              <h5 className="fw-bold">Description</h5>
               <p className="text-muted">{productDetail.description}</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Danh sách sản phẩm tương tự (Related Products) */}
       {Array.isArray(productDetail.relatedProducts) && productDetail.relatedProducts.length > 0 && (
         <section className="related-section">
-          <h3 className="h4 fw-bold mb-4">Sản Phẩm Tương Tự</h3>
+          <h3 className="h4 fw-bold mb-4 text-center">- Relate Product -</h3>
           <div className="row g-4">
             {productDetail.relatedProducts.map((rel) => (
               <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={rel.id}>
-                <div className="card h-100 shadow-sm border-0 product-card">
+                <div className="card h-100 product-card shadow-sm border-0 position-relative">
+                  <span className="position-absolute top-0 end-0 p-3 fs-5" style={{ cursor: 'pointer' }}>
+                    🤍
+                  </span>
                   <div className="bg-light p-3 text-center rounded-top">
                     <img
                       src={rel.image}
                       className="img-fluid"
                       alt={rel.name}
-                      style={{ height: '140px', objectFit: 'contain' }}
+                      style={{ height: '160px', objectFit: 'contain' }}
                     />
                   </div>
                   <div className="card-body d-flex flex-column p-3">
                     <h4 className="card-title h6 fw-bold text-capitalize text-truncate mb-2" title={rel.name}>
                       {rel.name}
                     </h4>
-                    <p className="fw-bold text-success mb-3">${rel.price}</p>
-                    <NavLink to={`/detail/${rel.id}`} className="btn btn-outline-primary btn-sm mt-auto">
-                      Xem chi tiết
-                    </NavLink>
+                    <p
+                      className="card-text text-muted small flex-grow-1"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {rel.shortDescription || rel.description}
+                    </p>
+                    <div className="d-flex align-items-center mt-auto pt-2">
+                      <NavLink
+                        to={`/detail/${rel.id}`}
+                        className="btn btn-warning fw-bold text-dark w-50 me-2"
+                      >
+                        Buy now
+                      </NavLink>
+                      <span className="bg-light fw-bold text-center py-2 px-3 rounded w-50 border">
+                        {rel.price}$
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

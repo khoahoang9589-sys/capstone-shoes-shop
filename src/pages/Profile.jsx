@@ -1,4 +1,3 @@
-// Nguy?n Th?nh Trung ? Design System, Auth & User Management
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
@@ -67,7 +66,6 @@ const Profile = () => {
       setNotice('Đã tải ảnh lên máy chủ.')
       try {
         const { data } = await getProfile()
-        // Only refresh the avatar so unsaved personal information stays in the form.
         setProfile(current => ({ ...current, avatar: data.content.avatar }))
         setBrokenAvatar(false)
         setNotice('Đã cập nhật ảnh đại diện.')

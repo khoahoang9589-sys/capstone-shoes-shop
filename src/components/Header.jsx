@@ -1,7 +1,3 @@
-// 👤 NGƯỜI LÀM: Hoàng Anh Khoa
-// 📌 NHIỆM VỤ: Header navbar responsive, hiển thị badge số lượng giỏ hàng
-// THAM KHẢO: reactjsbc97/src/components/HeaderHomeRoutes.jsx
-
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -11,7 +7,6 @@ const Header = () => {
   const signedIn = Boolean(getToken())
   const { mangSanPham } = useSelector((state) => state.cartReducer)
 
-  // Tính tổng số lượng sản phẩm trong giỏ hàng
   const tongSoLuong = mangSanPham.reduce((total, item) => total + (item.soLuong || 0), 0)
 
   return (

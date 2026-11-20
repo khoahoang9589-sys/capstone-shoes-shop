@@ -1,10 +1,3 @@
-// 👤 NGƯỜI LÀM: Nguyễn Thành Trung
-// 📌 NHIỆM VỤ: Footer chung cho toàn trang
-//
-// HƯỚNG DẪN:
-// - Hiển thị tên dự án, lớp học, năm
-// - Nằm cuối trang (bên dưới <Outlet /> trong HomeTemplate)
-
 import { Link } from 'react-router-dom'
 
 const Footer = () => {

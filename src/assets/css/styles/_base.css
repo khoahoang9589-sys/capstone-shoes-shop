@@ -8,7 +8,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
 
-/* Bootstrap primary overrides */
 .text-primary { color: var(--color-primary) !important; }
 .bg-primary   { background-color: var(--color-primary) !important; }
 
@@ -27,7 +26,6 @@ h1, h2, h3, h4, h5, h6 {
   --bs-btn-hover-color: #fff;
 }
 
-/* Card */
 .card {
   background-color: var(--color-surface);
   border-color: var(--bs-border-color);

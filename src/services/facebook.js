@@ -37,7 +37,6 @@ export function loadFacebookSdk({ appId, version }) {
   return sdkPromise
 }
 
-// Call directly from the click handler so the browser can open the login popup.
 export function requestFacebookToken(facebook) {
   return new Promise((resolve, reject) => {
     facebook.login(response => {

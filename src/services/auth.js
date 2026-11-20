@@ -1,4 +1,4 @@
-﻿import axios from 'axios'
+import axios from 'axios'
 export const TOKEN_KEY = 'accessToken'
 export const getToken = () => localStorage.getItem(TOKEN_KEY)
 export const clearSession = () => localStorage.removeItem(TOKEN_KEY)
@@ -20,7 +20,6 @@ export function errorMessage(error) {
   const message = error.response.data?.message || error.response.data?.content
   return typeof message === 'string' ? message : 'Yêu cầu không thành công. Vui lòng thử lại.'
 }
-// The live server exposes getProfile; getProfileV2 in the assignment returns 404.
 export function getProfile(config = {}) {
   return userApi.post('/getProfile', null, config)
 }
@@ -33,7 +32,6 @@ export async function signInWithFacebook(facebookToken) {
     error.response = { status: 502, data: { message: 'Máy chủ chưa cấp phiên đăng nhập. Vui lòng thử lại.' } }
     throw error
   }
-  // Store only the Shoes Shop token, never the Facebook token.
   localStorage.setItem(TOKEN_KEY, data.content.accessToken)
   return data.content
 }

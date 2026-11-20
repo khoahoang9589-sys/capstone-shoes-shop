@@ -1,4 +1,3 @@
-// Nguy?n Th?nh Trung ? Design System, Auth & User Management
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { Link, useLocation, useNavigate } from 'react-router-dom'

@@ -1,4 +1,3 @@
-// Nguy?n Th?nh Trung ? Design System, Auth & User Management
 import { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'

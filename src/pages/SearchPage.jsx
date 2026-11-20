@@ -1,7 +1,3 @@
-// 👤 NGƯỜI LÀM: Hoàng Anh Khoa
-// 📌 NHIỆM VỤ: Trang tìm kiếm + lọc giá sản phẩm bằng Lodash
-// THAM KHẢO: Hướng dẫn PLAN.md & reactjsbc97
-
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import _ from 'lodash'
@@ -14,12 +10,10 @@ const API_URL = 'https://shop.cyberlearn.vn/api/Product'
 const SearchPage = () => {
   const [arrProduct, setArrProduct] = useState([])
   const [keyword, setKeyword] = useState('')
-  const [minPrice, setMinPrice] = useState('')
-  const [maxPrice, setMaxPrice] = useState('')
+  const [sortOrder, setSortOrder] = useState('')
   const [loading, setLoading] = useState(true)
   const dispatch = useDispatch()
 
-  // B1: Gọi API lấy toàn bộ sản phẩm
   const getAllProduct = async () => {
     try {
       setLoading(true)
@@ -36,7 +30,6 @@ const SearchPage = () => {
     getAllProduct()
   }, [])
 
-  // B2 & B3: Lọc theo từ khóa và khoảng giá bằng Lodash (_.filter)
   let filteredProducts = arrProduct
 
   if (keyword.trim()) {
@@ -45,76 +38,67 @@ const SearchPage = () => {
     )
   }
 
-  if (minPrice !== '') {
-    filteredProducts = _.filter(filteredProducts, (sp) => sp.price >= Number(minPrice))
-  }
-
-  if (maxPrice !== '') {
-    filteredProducts = _.filter(filteredProducts, (sp) => sp.price <= Number(maxPrice))
+  if (sortOrder === 'decrease') {
+    filteredProducts = _.orderBy(filteredProducts, ['price'], ['desc'])
+  } else if (sortOrder === 'ascending') {
+    filteredProducts = _.orderBy(filteredProducts, ['price'], ['asc'])
   }
 
   return (
     <div className="search-page pb-5">
-      <h2 className="h3 fw-bold mb-4">Tìm Kiếm Sản Phẩm</h2>
-
-      {/* Thanh công cụ tìm kiếm và lọc giá */}
       <div className="card border-0 shadow-sm rounded-4 p-4 mb-4">
-        <div className="row g-3 align-items-end">
-          <div className="col-12 col-md-6">
-            <label className="form-label fw-semibold">Tên sản phẩm:</label>
+        <label htmlFor="search-input" className="form-label fw-bold fs-5 mb-2">Search</label>
+        <div className="row g-2">
+          <div className="col-12 col-md-9">
             <input
+              id="search-input"
               type="text"
               className="form-control"
-              placeholder="Nhập tên giày (ví dụ: nike, vans...)"
+              placeholder="product name ...."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />
           </div>
-
-          <div className="col-6 col-md-3">
-            <label className="form-label fw-semibold">Giá từ ($):</label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Min"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
-          </div>
-
-          <div className="col-6 col-md-3">
-            <label className="form-label fw-semibold">Giá đến ($):</label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Max"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
+          <div className="col-12 col-md-3">
+            <button
+              type="button"
+              className="btn btn-primary w-100 fw-bold"
+              onClick={() => {}}
+            >
+              SEARCH
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Số lượng kết quả */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <span className="text-muted">
-          Tìm thấy <strong className="text-primary">{filteredProducts.length}</strong> sản phẩm phù hợp
-        </span>
-        {(keyword || minPrice || maxPrice) && (
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            onClick={() => {
-              setKeyword('')
-              setMinPrice('')
-              setMaxPrice('')
-            }}
-          >
-            Đặt lại bộ lọc
-          </button>
-        )}
+      <div
+        className="p-3 text-white rounded-3 mb-4 fw-bold fs-4"
+        style={{ background: 'linear-gradient(90deg, #E21B90 0%, #1B02B5 100%)' }}
+      >
+        Search result
       </div>
 
-      {/* Loading */}
+      <div className="row align-items-center mb-4 g-3">
+        <div className="col-12 col-sm-6 col-md-4">
+          <label htmlFor="price-sort" className="form-label fw-bold mb-1">Price</label>
+          <select
+            id="price-sort"
+            className="form-select"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="">-- Chọn sắp xếp giá --</option>
+            <option value="decrease">decrease</option>
+            <option value="ascending">ascending</option>
+          </select>
+        </div>
+        <div className="col-12 col-sm-6 col-md-8 text-sm-end">
+          <span className="text-muted">
+            Tìm thấy <strong className="text-primary">{filteredProducts.length}</strong> sản phẩm
+          </span>
+        </div>
+      </div>
+
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status" />
@@ -124,40 +108,49 @@ const SearchPage = () => {
         <div className="card border-0 shadow-sm p-5 text-center rounded-4">
           <p className="fs-1">🔍</p>
           <h4 className="fw-bold">Không tìm thấy sản phẩm nào</h4>
-          <p className="text-muted">Thử nhập từ khóa khác hoặc điều chỉnh lại khoảng giá lọc.</p>
+          <p className="text-muted">Thử nhập từ khóa khác hoặc điều chỉnh lại bộ lọc.</p>
         </div>
       ) : (
-        /* B4: Render danh sách kết quả dạng Grid Card */
         <div className="row g-4">
           {filteredProducts.map((product) => (
             <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={product.id}>
-              <div className="card h-100 product-card shadow-sm border-0">
+              <div className="card h-100 product-card shadow-sm border-0 position-relative">
+                <span className="position-absolute top-0 end-0 p-3 fs-5" style={{ cursor: 'pointer' }}>
+                  🤍
+                </span>
                 <div className="bg-light p-3 text-center rounded-top">
                   <img
                     src={product.image}
                     className="img-fluid"
                     alt={product.name}
-                    style={{ height: '150px', objectFit: 'contain' }}
+                    style={{ height: '160px', objectFit: 'contain' }}
                   />
                 </div>
                 <div className="card-body d-flex flex-column p-3">
                   <h3 className="card-title h6 fw-bold text-capitalize text-truncate mb-2" title={product.name}>
                     {product.name}
                   </h3>
-                  <p className="fs-5 fw-bold text-success mb-3">${product.price}</p>
-                  <div className="d-flex gap-2 mt-auto">
-                    <NavLink to={`/detail/${product.id}`} className="btn btn-outline-primary btn-sm w-50">
-                      Chi tiết
-                    </NavLink>
-                    <button
-                      className="btn btn-primary btn-sm w-50"
-                      onClick={() => {
-                        dispatch(themSPVaoGioHang(product))
-                        alert(`Đã thêm "${product.name}" vào giỏ hàng!`)
-                      }}
+                  <p
+                    className="card-text text-muted small flex-grow-1"
+                    style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {product.shortDescription || product.description}
+                  </p>
+                  <div className="d-flex align-items-center mt-auto pt-2">
+                    <NavLink
+                      to={`/detail/${product.id}`}
+                      className="btn btn-warning fw-bold text-dark w-50 me-2"
                     >
-                      + Giỏ
-                    </button>
+                      Buy now
+                    </NavLink>
+                    <span className="bg-light fw-bold text-center py-2 px-3 rounded w-50 border">
+                      {product.price}$
+                    </span>
                   </div>
                 </div>
               </div>
