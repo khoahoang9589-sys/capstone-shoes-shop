@@ -1,4 +1,4 @@
-import FacebookLogin from 'react-facebook-login'
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-with-button'
 import { signInWithFacebook, errorMessage } from '../services/auth'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { safeReturnPath } from '../services/auth'
