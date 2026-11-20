@@ -12,14 +12,15 @@ export default function FacebookLoginButton() {
       alert('Facebook SDK bị chặn hoặc chưa tải xong. Vui lòng tắt tiện ích chặn quảng cáo (AdBlock / Brave Shields) và thử lại.')
       return
     }
-    window.FB.login(async function (response) {
+    window.FB.login(function (response) {
       if (response?.authResponse?.accessToken) {
-        try {
-          await signInWithFacebook(response.authResponse.accessToken)
-          navigate(safeReturnPath(state?.from), { replace: true })
-        } catch (error) {
-          alert(errorMessage(error))
-        }
+        signInWithFacebook(response.authResponse.accessToken)
+          .then(() => {
+            navigate(safeReturnPath(state?.from), { replace: true })
+          })
+          .catch(error => {
+            alert(errorMessage(error))
+          })
       }
     }, { scope: 'public_profile,email' })
   }
