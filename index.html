@@ -8,7 +8,13 @@
   <title>Shoes Shop</title>
   <script>
     window.fbAsyncInit = function () {
-      FB.init({ appId: '%VITE_FACEBOOK_APP_ID%', cookie: true, xfbml: false, version: 'v27.0' })
+      FB.init({
+        appId: '%VITE_FACEBOOK_APP_ID%',
+        cookie: true,
+        xfbml: false,
+        version: 'v20.0',
+        fedCM: false
+      })
     }
   </script>
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js"></script>

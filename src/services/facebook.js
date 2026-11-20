@@ -20,7 +20,7 @@ export function loadFacebookSdk({ appId, version = 'v20.0' }) {
       if (error) { script?.remove(); reject(error); return }
       try {
         if (!window.FB) throw new Error('Không tải được Facebook SDK.')
-        window.FB.init({ appId, version: v, cookie: false, xfbml: false, status: false })
+        window.FB.init({ appId, version: v, cookie: false, xfbml: false, status: false, fedCM: false })
         resolve(window.FB)
       } catch (error) { reject(error) }
     }
