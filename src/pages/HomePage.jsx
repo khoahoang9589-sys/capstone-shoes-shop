@@ -16,7 +16,8 @@ const HomePage = () => {
     try {
       setLoading(true)
       const res = await axios.get(API_URL)
-      setArrProduct(res.data.content || [])
+      const listProduct = (res.data.content || []).filter((item) => item.feature)
+      setArrProduct(listProduct)
     } catch (error) {
       console.log('Lỗi call API danh sách giày:', error)
     } finally {
